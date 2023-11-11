@@ -1,0 +1,122 @@
+﻿﻿@using TaskVahe.Data;
+@model List<ApplicationUser>
+
+@{
+    var numberId = 1;
+}
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+@if (Model != null)
+{
+    <div style="margin-top:20px;">
+        <h2 style="display:inline-block">Users table</h2>
+    </div>
+
+    <table style="width:100%">
+        <tr>
+            <th>    Id           </th>
+            <th>    FullName    </th>
+            <th>    Address    </th>
+            <th>    PhoneNumber   </th>
+            <th>    DateOfBirth   </th>
+            <th>    Email   </th>
+            <th>    Actions   </th>
+        </tr>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    @(numberId++)
+                </td>
+                <td>
+                    @user.FullName
+                </td>
+                <td>
+                    @user.Address
+                </td>
+                <td>
+                    @user.PhoneNumber
+                </td>
+                <td>
+                    @user.DateOfBirth
+                </td>
+                <td>
+                    @user.Email
+                </td>
+                <td>
+                    <form action="/dashboard/remove?id=@user.Id" method="post">
+                        <button type="submit"> 🗑 </button>
+                    </form>
+
+                    <button type="button" class="btn btn-default btn-lg" onclick='SetUserModel(@Json.Serialize(user))'>
+                        ✏️
+                    </button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+<div>
+    @ViewBag.Message
+</div>
+
+
+
+<div id="myModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">✏️</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form action="/dashboard/update" method="post" id="updateForm">
+                    <input type="hidden" id="userId" name="id" value="" />
+
+                    <input type="text" id="userfirstName" name="Firstname" value="" placeholder="FirstName" minlength="3" class="form-floating mb-3 form-control" autocomplete="username" required />
+                    <input type="text" id="userlastName" name="LastName" value="" placeholder="LastName" minlength="3" class="form-floating mb-3 form-control" autocomplete="new-password" required />
+                    <input type="text" id="useraddress" name="Address" value="" placeholder="Address" minlength="5" class="form-floating mb-3 form-control" autocomplete="new-password" required />
+                    <input type="date" id="userdateOfBirth" name="DateOfBirth" value="" class="form-floating mb-3 form-control" autocomplete="username" required />
+                    <input type="text" id="userphoneNumber" name="PhoneNumber" value="" class="form-floating mb-3 form-control" placeholder="(123) 456-7890" pattern="\(\d{3}\) \d{3}-\d{4}" autocomplete="tel" required minlength="14" maxlength="14" />
+                    <input type="text" id="useremail" name="Email" value="" placeholder="Email" class=" form-floating mb-3 form-control" autocomplete="username" required />
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="close btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" onclick='$("#updateForm").submit();' class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+        function SetUserModel(user) {
+            $("#userid").val(user.id);
+            $("#userfirstName").val(user.firstname);
+            $("#userlastName").val(user.lastname);
+            $("#userfullName").val(user.fullName);
+            $("#useraddress").val(user.address);
+            $("#useremail").val(user.email);
+            $("#userphoneNumber").val(user.phoneNumber);
+            $("#userdateOfBirth").val(user.dateOfBirth);
+        }
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Add JavaScript for formatting the phone number
+        document.getElementById('phoneNumber').addEventListener('input', function (event) {
+            let inputValue = event.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+            if (inputValue.length > 0) {
+                inputValue = '(' + inputValue.substring(0, 3) + ') ' + inputValue.substring(3, 6) + '-' + inputValue.substring(6, 10);
+            }
+            event.target.value = inputValue;
+        });
+    });
+</script>
