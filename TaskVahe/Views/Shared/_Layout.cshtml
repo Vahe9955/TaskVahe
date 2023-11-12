@@ -17,7 +17,15 @@
             $(".btn").click(function () {
                 $("#myModal").modal('show');
             });
+
+        $("#closeModalButton").click(function () {
+            $("#myModal").modal('hide');
         });
+        
+        $("#cancelModalButton").click(function () {
+            $("#myModal").modal('hide');
+        });
+          });
     </script>
     <style>
         .bs-example {
